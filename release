@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+. ./lib.sh
+
+pre_release_checks
+create_package
+publish_package
