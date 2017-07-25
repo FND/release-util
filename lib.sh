@@ -39,6 +39,7 @@ function publish_package {
 
 	echo "about to publish v${version}"
 	read -n1 -p "enter 'y' to continue: " confirmation
+	echo
 	if [ "$confirmation" = "y" ]; then
 		cd "$TARGET_DIR"
 		npm publish
