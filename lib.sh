@@ -24,9 +24,10 @@ function pre_release_checks {
 function create_package {
 	mkdir "$TARGET_DIR"
 
-	git ls-tree --name-only HEAD | while read filename; do
-		cp -r "$filename" "$TARGET_DIR"
-	done
+	release_archive="_RELEASE_ARCHIVE_.tar.gz"
+	git archive -o "$release_archive" HEAD
+	tar xzf "$release_archive" -C "$TARGET_DIR"
+	rm "$release_archive"
 
 	echo "$TARGET_DIR"
 }
