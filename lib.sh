@@ -15,6 +15,12 @@ function abort {
 
 # ensures there are no unstaged changes
 function pre_release_checks {
+	default_branch=${1:-"master"}
+	current_branch=`git rev-parse --abbrev-ref HEAD`
+	if [ "$current_branch" != "$default_branch" ]; then
+		abort "current branch is $current_branch, expected $default_branch"
+	fi
+
 	git diff --exit-code --quiet && \
 			git diff --cached --exit-code --quiet || \
 			abort "unstaged changes"
