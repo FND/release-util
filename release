@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 . ./lib.sh
 
 pre_release_checks

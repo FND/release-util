@@ -39,11 +39,7 @@ function create_package {
 }
 
 function publish_package {
-	version=`node -p 'require("./package.json").version'`
-	if [ -z "$version" ]; then
-		abort "failed to determine version"
-	fi
-
+	version=`determine_version "."`
 	echo "about to publish v${version}"
 	read -n1 -p "enter 'y' to continue: " confirmation
 	echo
@@ -54,4 +50,14 @@ function publish_package {
 		git tag "v${version}"
 		git push --tags origin master
 	fi
+}
+
+function determine_version {
+	root_dir=`realpath "${1:?}"`
+	version=`node -p "require('$root_dir/package.json').version"`
+	if [ -z "$version" ]; then
+		abort "failed to determine version"
+	fi
+
+	echo "$version"
 }
