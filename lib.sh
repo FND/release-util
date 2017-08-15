@@ -1,6 +1,7 @@
 set -e
+set -u
 
-TARGET_DIR=`realpath "tmp_release"`
+TARGET_DIR=`realpath "_tmp_release"` # XXX: implicit path
 
 function cleanup {
 	rm -r "$TARGET_DIR" 2> /dev/null || true
@@ -30,7 +31,7 @@ function pre_release_checks {
 function create_package {
 	mkdir "$TARGET_DIR"
 
-	release_archive="_RELEASE_ARCHIVE_.tar.gz"
+	release_archive="_RELEASE_ARCHIVE_.tar.gz" # XXX: implicit path
 	git archive -o "$release_archive" HEAD
 	tar xzf "$release_archive" -C "$TARGET_DIR"
 	rm "$release_archive"
@@ -39,7 +40,7 @@ function create_package {
 }
 
 function publish_package {
-	version=`determine_version "."`
+	version=`determine_version "."` # XXX: implicit path
 	echo "about to publish v${version}"
 	read -n1 -p "enter 'y' to continue: " confirmation
 	echo
