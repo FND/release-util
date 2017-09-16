@@ -1,6 +1,6 @@
 {
 	"name": "release-util-fnd",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"description": "Bash utilities for releasing npm packages",
 	"author": "FND",
 	"license": "Apache-2.0",

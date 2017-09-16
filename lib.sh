@@ -14,7 +14,8 @@ function abort {
 	exit 1
 }
 
-# ensures there are no unstaged changes
+# verifies branch, ensures that local dependencies are up to date and balks at
+# unstaged changes
 function pre_release_checks {
 	default_branch=${1:-"master"}
 	current_branch=`git rev-parse --abbrev-ref HEAD`
@@ -25,6 +26,8 @@ function pre_release_checks {
 	git diff --exit-code --quiet && \
 			git diff --cached --exit-code --quiet || \
 			abort "unstaged changes"
+
+	npm install
 }
 
 # selectively determines package contents
