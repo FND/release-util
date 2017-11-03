@@ -43,16 +43,22 @@ function create_package {
 }
 
 function publish_package {
+	remote=${1:-"origin"}
+	branch=${2:-"master"}
+
 	version=`determine_version "."` # XXX: implicit path
 	echo "about to publish v${version}"
 	read -n1 -p "enter 'y' to continue: " confirmation
 	echo
 	if [ "$confirmation" = "y" ]; then
+		git push "$remote" "$branch" # ensures local repository is up to date
+
 		cd "$TARGET_DIR"
 		npm publish
 		cd -
+
 		git tag "v${version}"
-		git push --tags origin master
+		git push --tags "$remote" "$branch"
 	fi
 }
 
