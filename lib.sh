@@ -27,7 +27,12 @@ function pre_release_checks {
 			git diff --cached --exit-code --quiet || \
 			abort "unstaged changes"
 
-	npm install
+	echo "about to install dependencies to ensure consistent test environment"
+	read -n1 -p "enter 's' to skip: " skip
+	echo
+	if [ "$skip" != "s" ]; then
+		npm install
+	fi
 }
 
 # selectively determines package contents
