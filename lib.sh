@@ -1,14 +1,21 @@
 set -e
 set -u
 
+realpath() {
+	filepath=${1:?}
+	node -r fs -p \
+			'try { fs.realpathSync(process.argv[1]); } catch(err) { if(err.code !== "ENOENT") { throw err; } err.path; }' \
+			"$filepath"
+}
+
 TARGET_DIR=`realpath "_tmp_release"` # XXX: implicit path
 
-function cleanup {
+cleanup() {
 	rm -r "$TARGET_DIR" 2> /dev/null || true
 }
 trap cleanup EXIT
 
-function abort {
+abort() {
 	msg=${1:?}
 	echo "ABORTING: $msg"
 	exit 1
@@ -16,7 +23,7 @@ function abort {
 
 # verifies branch, ensures that local dependencies are up to date and balks at
 # unstaged changes
-function pre_release_checks {
+pre_release_checks() {
 	default_branch=${1:-"master"}
 	current_branch=`git rev-parse --abbrev-ref HEAD`
 	if [ "$current_branch" != "$default_branch" ]; then
@@ -36,7 +43,7 @@ function pre_release_checks {
 }
 
 # selectively determines package contents
-function create_package {
+create_package() {
 	mkdir "$TARGET_DIR"
 
 	release_archive="_RELEASE_ARCHIVE_.tar.gz" # XXX: implicit path
@@ -47,7 +54,7 @@ function create_package {
 	echo "$TARGET_DIR"
 }
 
-function publish_package {
+publish_package() {
 	remote=${1:-"origin"}
 	branch=${2:-"master"}
 
@@ -65,7 +72,7 @@ function publish_package {
 	fi
 }
 
-function determine_version {
+determine_version() {
 	root_dir=`realpath "${1:?}"`
 	version=`node -p "require('$root_dir/package.json').version"`
 	if [ -z "$version" ]; then
