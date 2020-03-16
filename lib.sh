@@ -65,10 +65,11 @@ publish_package() {
 	if [ "$confirmation" = "y" ]; then
 		git push "$remote" "$branch" # ensures local repository is up to date
 
-		(cd "$TARGET_DIR"; npm publish)
+		tag="v${version}"
+		git tag -am "$tag" "$tag"
+		git push "$remote" "$tag"
 
-		git tag "v${version}"
-		git push --tags "$remote" "$branch"
+		(cd "$TARGET_DIR"; npm publish)
 	fi
 }
 
