@@ -62,15 +62,17 @@ publish_package() {
 	echo "about to publish v${version}"
 	read -n1 -p "enter 'y' to continue: " confirmation
 	echo
-	if [ "$confirmation" = "y" ]; then
-		git push "$remote" "$branch" # ensures local repository is up to date
-
-		tag="v${version}"
-		git tag -am "$tag" "$tag"
-		git push "$remote" "$tag"
-
-		(cd "$TARGET_DIR"; npm publish)
+	if [ "$confirmation" != "y" ]; then
+		exit 1
 	fi
+
+	git push "$remote" "$branch" # ensures local repository is up to date
+
+	tag="v${version}"
+	git tag -am "$tag" "$tag"
+	git push "$remote" "$tag"
+
+	(cd "$TARGET_DIR"; npm publish)
 }
 
 determine_version() {
