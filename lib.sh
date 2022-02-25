@@ -1,6 +1,8 @@
 set -e
 set -u
 
+default_branch="main"
+
 realpath() {
 	filepath=${1:?}
 	node -r fs -p \
@@ -24,10 +26,10 @@ abort() {
 # verifies branch, ensures that local dependencies are up to date and balks at
 # unstaged changes
 pre_release_checks() {
-	default_branch=${1:-"master"}
+	release_branch=${1:-"$default_branch"}
 	current_branch=`git rev-parse --abbrev-ref HEAD`
-	if [ "$current_branch" != "$default_branch" ]; then
-		abort "current branch is $current_branch, expected $default_branch"
+	if [ "$current_branch" != "$release_branch" ]; then
+		abort "current branch is $current_branch, expected $release_branch"
 	fi
 
 	git diff --exit-code --quiet && \
@@ -56,7 +58,7 @@ create_package() {
 
 publish_package() {
 	remote=${1:-"origin"}
-	branch=${2:-"master"}
+	branch=${2:-"$default_branch"}
 
 	version=`determine_version "."` # XXX: implicit path
 	echo "about to publish v${version}"
